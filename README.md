@@ -1,23 +1,18 @@
 # MyRDB
 
-MyRDBは、Rubyで実装されたシンプルなリレーショナルデータベースです。現在は`SELECT`, `INSERT`, `CREATE TABLE`の基本的なSQL文をサポートしています。
+MyRDB is a simple relational database implemented in Ruby. It currently supports basic SQL statements such as `SELECT`, `INSERT`, and `CREATE TABLE`.
 
-## セットアップ
+## Setup
 
-1. プロジェクトをクローンまたはダウンロードします。
+1. Clone or download the project.
 
 git clone https://github.com/yourusername/my_rdb.git
 
-2. 必要なgemがある場合は、プロジェクトディレクトリで`bundle install`を実行してインストールします。
+2. If necessary, install required gems by running `bundle install` in the project directory.
 
-```sh
-cd my_rdb
-bundle install
-```
+## Usage
 
-## 使い方
-
-以下のコードは、MyRDBを使ってデータベースを作成し、テーブルを作成してデータを操作する例です。
+The following code demonstrates how to use MyRDB to create a database, create a table, and manipulate data.
 
 ```ruby
 require_relative 'lib/database'
@@ -25,23 +20,25 @@ require_relative 'lib/table'
 
 db = Database.new
 
-# テーブル作成
+# Create table
 db.execute("CREATE TABLE users (id, name, age)")
 
-# データ挿入
+# Insert data
 db.execute("INSERT INTO users VALUES (1, 'Alice', 30)")
 db.execute("INSERT INTO users VALUES (2, 'Bob', 25)")
 
-# データ検索
+# Query data
 puts db.execute("SELECT * FROM users WHERE name = 'Alice'") # => [[1, "Alice", 30]]
 ```
 
-詳細な使い方やAPIについては、lib/database.rbとlib/table.rbのソースコードを参照してください。
+For more detailed usage and API information, refer to the source code in lib/database.rb and lib/table.rb.
 
-## 貢献
+## Contributing
 
-バグ報告や機能追加のリクエストは、GitHubのissueにて受け付けています。
+Bug reports and feature requests are welcome through the GitHub issues.
 
-## ライセンス
+## License
 
-MyRDBはMITライセンスのもとで公開されています。
+MyRDB is released under the MIT License.
+
+Use this sample as a reference to create an English version of the `README.md` for your project. Replace the repository URL, project name, and other relevant information as needed.
