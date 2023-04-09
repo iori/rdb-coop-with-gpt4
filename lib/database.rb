@@ -56,4 +56,3 @@ class Database
     select(table_name, conditions)
   end
 end
-end
