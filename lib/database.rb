@@ -1,6 +1,4 @@
 class Database
-  attr_accessor :tables
-
   def initialize
     @tables = {}
     @parser = Parser.new
@@ -22,7 +20,8 @@ class Database
   private
 
   def create_table(name, columns)
-    @tables[name] = Table.new(name, columns)
+    file_path = "data/#{name}.bin"
+    @tables[name] = PersistentTable.new(name, columns, file_path)
   end
 
   def insert(name, row)
