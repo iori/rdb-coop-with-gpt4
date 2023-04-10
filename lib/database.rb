@@ -1,3 +1,6 @@
+require_relative 'persistent_table'
+require_relative 'parser'
+
 class Database
   def initialize
     @tables = {}
