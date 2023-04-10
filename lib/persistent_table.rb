@@ -1,6 +1,6 @@
-class PersistentTable
-  attr_reader :name, :columns, :file_path
+require 'fileutils'
 
+class PersistentTable
   def initialize(name, columns, file_path)
     @name = name
     @columns = columns
@@ -8,15 +8,15 @@ class PersistentTable
     @rows = []
 
     if File.exist?(@file_path)
-      load_data_from_file
+      load_data
     else
-      save_data_to_file
+      save_data
     end
   end
 
   def insert(row)
     @rows << row
-    save_data_to_file
+    save_data
   end
 
   def select(conditions = {})
@@ -27,19 +27,17 @@ class PersistentTable
 
   private
 
-  def load_data_from_file
-    File.open(@file_path, 'rb') do |file|
-      file.each_line do |line|
-        @rows << line.chomp.split(',').map { |value| value.gsub(/'(.+)'/, '\1') }
-      end
+  def save_data
+    File.open(@file_path, 'wb') do |file|
+      Marshal.dump({ columns: @columns, rows: @rows }, file)
     end
   end
 
-  def save_data_to_file
-    File.open(@file_path, 'wb') do |file|
-      @rows.each do |row|
-        file.puts row.map { |value| "'#{value}'" }.join(',')
-      end
+  def load_data
+    File.open(@file_path, 'rb') do |file|
+      data = Marshal.load(file)
+      @columns = data[:columns]
+      @rows = data[:rows]
     end
   end
 end
