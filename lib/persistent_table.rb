@@ -2,6 +2,7 @@ require 'fileutils'
 require_relative 'page'
 
 class PersistentTable
+  PAGE_SIZE = 4096
   ROW_SIZE = 256 # 固定長
 
   def initialize(name, columns, data_path)
@@ -10,18 +11,20 @@ class PersistentTable
     @data_path = data_path
     @rows = []
 
+    # @TODO: next_row_idが常に最初は0なので上書きされてしまう
     @next_row_id = 0
+    @pages = []
 
     if File.exist?(@data_path)
       load_data
-      #load_data2
     else
-      @pages = [Page.new]
+      @pages << Page.new
       save_data
     end
   end
 
   def insert(row)
+    p row
     serialized_row = Marshal.dump(row)
     serialized_row_length = serialized_row.bytesize
 
@@ -56,20 +59,16 @@ class PersistentTable
   end
 
   private
-=begin
-  def load_data
-    File.open(@data_path, 'rb') do |file|
-      p file
-      data = Marshal.load(file)
-      @columns = data[:columns]
-      @rows = data[:rows]
-    end
-  end
-=end
 
-  def load_data2
-    binary_data = File.binread(@data_path)
-    @pages = binary_data.scan(/.{1,#{@page_size}}/).map { |page_data| Page.from_binary(page_data) }
+  def load_data
+    File.open(@data_path, "rb") do |file|
+      # シリアライズされたページをファイルから読み込み
+      until file.eof?
+        page_data = file.read(ROW_SIZE * PAGE_SIZE)
+        page = Page.new(page_data)
+        @pages << page
+      end
+    end
   end
 
   def save_data
